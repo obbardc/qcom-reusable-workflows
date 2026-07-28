@@ -1,6 +1,17 @@
 name: Dependency Review Reusable Workflow
 on:
-  workflow_call:  
+  workflow_call:
+    inputs:
+      allow-dependencies-licenses:
+        required: false
+        type: string
+        default: ''
+        description: 'Comma-separated list of dependencies in purl format that are exempt from the license check, e.g. "pkg:githubactions/foundriesio/lava-action". Empty means no exemptions.'
+      fail-on-severity:
+        required: false
+        type: string
+        default: 'critical'
+        description: "Don't block PRs below this severity. One of: low, moderate, high, critical."
 
 permissions:
   contents: read
@@ -66,4 +77,5 @@ jobs:
         with:
           base-ref: ${{ steps.setrefs.outputs.base_ref }}
           head-ref: ${{ steps.setrefs.outputs.head_ref }}
-          fail-on-severity: critical
+          fail-on-severity: ${{ inputs.fail-on-severity }}
+          allow-dependencies-licenses: ${{ inputs.allow-dependencies-licenses }}
