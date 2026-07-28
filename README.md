@@ -98,11 +98,19 @@ Dependency Review checks for vulnerabilities in your project dependencies when t
 
 **Configuration Options:**
 - `enable-dependency-review`: Boolean to enable/disable the review (default: `true`)
+- `dependency-review-fail-on-severity`: String severity threshold below which findings do not block the PR — one of `low`, `moderate`, `high`, `critical` (default: `critical`)
+- `dependency-review-allow-licenses`: String containing a comma-separated list of dependencies in [purl](https://github.com/package-url/purl-spec) format that are exempt from the license check (default: empty string). Useful for dependencies that report an unknown license because they publish git tags but no GitHub Releases, and so are missing from GitHub's dependency-graph metadata. For example:
+
+```yaml
+    dependency-review-allow-licenses: >-
+      pkg:githubactions/some-org/some-action,
+      pkg:githubactions/another-org/another-action
+```
 
 The workflow automatically:
 - Detects if dependency review is supported for your repository
 - Runs the review on pull requests or pushes
-- Fails on critical severity vulnerabilities
+- Fails on critical severity vulnerabilities (unless `dependency-review-fail-on-severity` is changed)
 
 ### Repolinter Check
 
