@@ -27,6 +27,16 @@ on:
         required: false
         type: boolean
         default: true
+      dependency-review-allow-licenses:
+        required: false
+        type: string
+        default: ''
+        description: 'Comma-separated list of dependencies in purl format that are exempt from the dependency review license check, e.g. "pkg:githubactions/foundriesio/lava-action".'
+      dependency-review-fail-on-severity:
+        required: false
+        type: string
+        default: 'critical'
+        description: "Don't block PRs below this severity. One of: low, moderate, high, critical."
       enable-commit-msg-check:
         required: false
         type: boolean
@@ -61,6 +71,9 @@ jobs:
     if: ${{ inputs.enable-dependency-review }}
     name: Dependency Review
     uses: ./.github/workflows/reusable-dependency-review.yml
+    with:
+      allow-dependencies-licenses: ${{ inputs.dependency-review-allow-licenses }}
+      fail-on-severity: ${{ inputs.dependency-review-fail-on-severity }}
     permissions:
       contents: read
 
